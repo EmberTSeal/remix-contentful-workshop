@@ -36,4 +36,32 @@ async function getAllBlogs() {
     return await result.data.blogCollection.items
 }
 
-export { getAllBlogs }
+async function getSingleBlogBySlug(slug) {
+    const query = `
+    query($slug: String){
+        blogCollection(where: {slug: $slug}) {
+          items {
+            title
+            description
+            content {
+                json
+            }
+            coverImage {
+              url
+              description
+            }
+          }
+        }
+      }
+    `
+    const variables = {
+        slug: slug
+    };
+    const response = await apiCall(query, variables);
+    const result = await response.json();
+    console.log(result)
+    return await result.data.blogCollection.items[0]
+}
+
+
+export { getAllBlogs ,getSingleBlogBySlug}
